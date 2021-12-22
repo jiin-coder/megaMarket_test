@@ -1,15 +1,15 @@
-<!doctype html>
-<html lang="ko">
-<!-- Required meta tags -->
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<head>
-    <h1>{{ Product.name }}</h1>
-</head>
-
-<body>
-<div>
-    {{ Product.sale_price }}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+<div class="container my-3">
+    <h2 class="border-bottom py-2">{{ product.name }}</h2>
+    <div class="card my-3">
+        <div class="card-body">
+            <div class="card-text" style="white-space: pre-line;">{{ product.price }}</div>
+            <div class="d-flex justify-content-end">
+                <div class="badge badge-light p-2">
+                    {{ product.reg_date }}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-</body>
-</html>
