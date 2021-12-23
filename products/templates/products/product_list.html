@@ -1,32 +1,11 @@
-{% extends 'base.html' %}
 {% block content %}
-
-<div class="container my-3">
-    <table class="table">
-        <thead>
-        <tr class="thead-dark">
-            <th>번호</th>
-            <th>제목</th>
-            <th>작성일시</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% if product_list %}
-        {% for product in product_list %}
-        <tr>
-            <td>{{ forloop.counter }}</td>
-            <td>
-                <a href="{% url 'products:detail' product.id %}">{{ product.name }}</a>
-            </td>
-            <td>{{ product.reg_date }}</td>
-        </tr>
-        {% endfor %}
-        {% else %}
-        <tr>
-            <td colspan="3">상품이 없습니다.</td>
-        </tr>
-        {% endif %}
-        </tbody>
-    </table>
-</div>
+<section class="section-prod-list" >
+    <div class="container">
+        <ul>
+            {% for product in product_list %}
+            <li><a href="{% url 'products:detail' product.id %}"> {{product.id}} {{product.display_name}} {{product.sale_price}}원</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
 {% endblock %}
