@@ -21,15 +21,29 @@
             마켓 : {{product.market.name}}
         </div>
 
-        <h1 class="mt-4">옵션</h1>
-        <ul>
-            {% for product_real in product_reals %}
-            <li>
-                {{ product_real.option_1_type }} : {{ product_real.option_1_display_name }}
-                / {{ product_real.option_2_type }} : {{ product_real.option_2_display_name }}
-            </li>
-            {% endfor %}
-        </ul>
+        <h1 class="mt-3">옵션</h1>
+            <ul>
+                {% for product_real in product_reals %}
+                <li>
+                    {{ product_real.option_1_type }} : {{ product_real.option_1_display_name }}
+                    / {{ product_real.option_2_type }} : {{ product_real.option_2_display_name }}
+                </li>
+                {% endfor %}
+            </ul>
+
+        <form method="POST" action="{% url 'qna:create_question' 'product' product.id %}">
+            {% csrf_token %}
+
+            <div>
+                <span>내용</span>
+                <textarea name="body" rows="10"></textarea>
+            </div>
+
+             <div>
+                 <span>질문작성</span>
+                 <input type="submit" value="작성">
+             </div>
+        </form>
 
     </div>
 </section>
