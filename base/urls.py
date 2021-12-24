@@ -22,13 +22,12 @@ from . import views
 APP_NAME = ''
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('', views.index),
     path('accounts/', include('accounts.urls')),
     path('products/', include('products.urls')),
     path('qna/', include('questions.urls')),
-    path('', views.index),
+    path('admin/', admin.site.urls),
 ]
-
 
 if settings.DEBUG:
     import debug_toolbar
