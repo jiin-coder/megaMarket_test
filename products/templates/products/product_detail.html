@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 {% load humanize %}
 {% load django_bootstrap5 %}
-
 {%block content %}
 <section class="section-prod-detail">
     <div class="container">
@@ -9,7 +8,6 @@
             <div class="card-header">
                 상품상세정보
             </div>
-
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                     <img class="t-w-full t-max-w-[300px]" src="{{product.thumb_img_url}}" alt="">
@@ -33,14 +31,11 @@
                     마켓 : <span class="badge bg-primary">{{product.market.name}}</span>
                 </li>
             </ul>
-
         </div>
-
         <div class="card t-mt-[30px]">
             <div class="card-header">
                 옵션
             </div>
-
             <ul class="list-group list-group-flush">
                 {% for product_real in product_reals %}
                 <li class="list-group-item">
@@ -51,14 +46,13 @@
                 {% endfor %}
             </ul>
         </div>
-
         <div class="card t-mt-[30px]">
             <div class="card-header">
                 질문등록
             </div>
 
             <div class="card-body">
-
+                {% if user.is_authenticated %}
                 <form method="POST" action="{% url 'products:question_create' product.id %}">
                     {% csrf_token %}
 
@@ -67,14 +61,15 @@
                     {% bootstrap_button button_type="reset" content="취소" %}
 
                 </form>
+                {% else %}
+                <a href="{% url 'accounts:signin' %}">로그인</a> 후 이용해주세요.
+                {% endif %}
             </div>
         </div>
-
         <div class="card t-mt-[30px]">
             <div class="card-header">
                 질문리스트
             </div>
-
             <ul class="list-group list-group-flush">
                 {% for question in questions %}
                 <li class="list-group-item">
