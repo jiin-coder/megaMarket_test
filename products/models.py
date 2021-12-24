@@ -1,10 +1,12 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericRelation
 
 # Create your models here.
 from markets.models import Market
-
+from questions.models import Question
 
 class Product(models.Model):
+    id = models.AutoField(primary_key=True)
     reg_date = models.DateTimeField('등록날짜', auto_now_add=True)
     update_date = models.DateTimeField('갱신날짜', auto_now=True)
     is_deleted = models.BooleanField('삭제여부', default=False)
@@ -20,7 +22,7 @@ class Product(models.Model):
     hit_count = models.PositiveIntegerField('조회수', default=0)
     review_count = models.PositiveIntegerField('리뷰수', default=0)
     review_point = models.PositiveIntegerField('리뷰평점', default=0)
-
+    questions = GenericRelation(Question, related_query_name="question")
 
 class ProductReal(models.Model):
     reg_date = models.DateTimeField('등록날짜', auto_now_add=True)
