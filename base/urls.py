@@ -22,7 +22,7 @@ from . import views
 APP_NAME = ''
 
 urlpatterns = [
-    path('', views.index),
+    path('', views.index, name="main"),
     path('accounts/', include('accounts.urls')),
     path('products/', include('products.urls')),
     path('qna/', include('questions.urls')),
