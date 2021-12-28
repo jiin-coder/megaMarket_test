@@ -8,14 +8,23 @@ from django.shortcuts import render, get_object_or_404, redirect
 from products.models import Product
 from questions.forms import QuestionForm
 from questions.models import Question
+from django.core.paginator import Paginator
 
 
 def product_list(request: HttpRequest):  # 상품 목록
-    products = Product.objects.order_by('-reg_date')
 
-    return render(request, 'products/product_list.html', {
-        "products": products
-    })
+    # 조회
+    products = Product.objects.order_by('-id')
+
+    # 입력 파라미터
+    page = request.GET.get('page', '1') #페이지
+
+    # 페이징처리
+    paginator = Paginator(products, 12) # 페이지당 10개씩 노출
+    page_obj = paginator.get_page(page)
+    context = {'products': page_obj}
+
+    return render(request, 'products/product_list.html', context)
 
 
 def _product_detail(request: HttpRequest, product_id):
@@ -50,6 +59,7 @@ def product_detail(request: HttpRequest, product_id):
 
 def question_create(request: HttpRequest, product_id):
     return _product_detail(request, product_id)
+
 
 @login_required
 def question_delete(request: HttpRequest, product_id, question_id):
