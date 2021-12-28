@@ -1,4 +1,7 @@
 Django
-mysqlclient
-django-bootstrap5
 pillow
+git+https://github.com/jhs512/django-pydenticon
+easy-thumbnails
+django_bootstrap5
+mysqlclient
+lazy-string
