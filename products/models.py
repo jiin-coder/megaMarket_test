@@ -5,6 +5,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from markets.models import Market
 from questions.models import Question
 
+
 class Product(models.Model):
     id = models.AutoField(primary_key=True)
     reg_date = models.DateTimeField('등록날짜', auto_now_add=True)
@@ -25,7 +26,47 @@ class Product(models.Model):
     questions = GenericRelation(Question, related_query_name="question")
 
     def thumb_img_url(self):
+        img_names = {
+            1: '구두',
+            2: '니트',
+            3: '롱스커트',
+            4: '숏스커트',
+            5: '청바지',
+            6: '청자켓',
+            7: '청치마',
+            8: '코트',
+            9: '백',
+            10: '블라우스',
+        }
+        # img_name = img_names[self.category_id]
+
         return f"https://picsum.photos/id/{self.id}/300/300"
+
+        # return f"https://raw.githubusercontent.com/jhs512/mbly-img/master/{img_name}.jpg"
+
+    def colors(self):
+        colors = []
+        product_reals = self.product_reals.all()
+        for product_real in product_reals:
+            colors.append(product_real.option_2_name)
+
+        html = ''
+
+        for color in set(colors):
+            if color == '레드':
+                rgb_color = 'red'
+            elif color == '그린':
+                rgb_color = 'green'
+            elif color == '블루':
+                rgb_color = 'blue'
+            elif color == '핑크':
+                rgb_color = 'pink'
+            elif color == '와인':
+                rgb_color = '#722F37'
+            html += f"""<span style="width:10px; height:10px; display:inline-block; border-radius:50%; margin:0 3px; background-color:{rgb_color};"></span>"""
+
+        return html
+
 
 class ProductReal(models.Model):
     reg_date = models.DateTimeField('등록날짜', auto_now_add=True)

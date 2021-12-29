@@ -13,18 +13,23 @@ from django.core.paginator import Paginator
 
 def product_list(request: HttpRequest):  # 상품 목록
 
-    # 조회
-    products = Product.objects.order_by('-id')
 
     # 입력 파라미터
-    page = request.GET.get('page', '1') #페이지
+    search_keyword = request.GET.get('search_keyword', '')
+    page = request.GET.get('page', '1')
+
+    if not search_keyword:
+        products = Product.objects.order_by('-id')
+    else:
+        products = Product.objects.filter(display_name__icontains=search_keyword).order_by('-id')
 
     # 페이징처리
     paginator = Paginator(products, 12) # 페이지당 10개씩 노출
-    page_obj = paginator.get_page(page)
-    context = {'products': page_obj}
+    products = paginator.get_page(page)
 
-    return render(request, 'products/product_list.html', context)
+    return render(request, "products/product_list.html", {
+        "products": products
+    })
 
 
 def _product_detail(request: HttpRequest, product_id):
