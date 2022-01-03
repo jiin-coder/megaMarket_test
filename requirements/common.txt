@@ -6,3 +6,4 @@ django_bootstrap5
 mysqlclient
 lazy-string
 requests
+django-dotenv
