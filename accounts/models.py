@@ -1,9 +1,10 @@
+from django.contrib.auth import login
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth import authenticate, login
 # Create your models here.
 from django.db import models
 from django.db.models import QuerySet
 from django.http import HttpRequest
+
 
 class User(AbstractUser):
     class GenderChoices(models.TextChoices):

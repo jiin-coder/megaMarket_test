@@ -27,16 +27,17 @@ urlpatterns = [
     path('products/', include('products.urls')),
     path('qna/', include('questions.urls')),
     path('admin/', admin.site.urls),
-    path('find_username/', include('accounts.urls')),
+    ## path('find_username/', include('accounts.urls')),
 ]
 
 if settings.DEBUG:
     import debug_toolbar
 
+    # DDT 를 위한 설정
     urlpatterns += [
         path('__debug__/', include(debug_toolbar.urls)),
     ]
 
+    # 미디어 파일
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
-
