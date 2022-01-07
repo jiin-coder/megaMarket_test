@@ -1,27 +1,28 @@
 import string
 
-from products.models import Product, ProductReal
+import django.db.models.deletion
+
+from products.models import ProductCategory, Product, ProductReal
+
+def gen_master_product_category(apps, schema_editor):
+    ProductCategory(name='구두').save()
+    ProductCategory(name='니트').save()
+    ProductCategory(name='롱스커트').save()
+    ProductCategory(name='숏스커트').save()
+    ProductCategory(name='청바지').save()
+    ProductCategory(name='청자켓').save()
+    ProductCategory(name='청치마').save()
+    ProductCategory(name='코트').save()
+    ProductCategory(name='백').save()
+    ProductCategory(name='블라우스').save()
 
 
 def gen_product(market_id: int, name: string, display_name: string, price: int, opt_1_names: (string), is_hidden: bool,
                 is_sold_out: bool, hit_count: int, review_count: int, review_point: int):
-    category_ids = {
-        '구두': 1,
-        '니트': 2,
-        '롱스커트': 3,
-        '숏스커트': 4,
-        '청바지': 5,
-        '청자켓': 6,
-        '청치마': 7,
-        '코트': 8,
-        '백': 9,
-        '블라우스': 10,
-    }
+    category_id = ProductCategory.objects.filter(name=name).first().id
 
-    category_id = category_ids[name]
-
-    opt_2_names = ('레드', '와인', '그린', '핑크')
-    opt_2_display_names = ('감성레드', '감성와인', '감성그린', '감성핑크')
+    opt_2_names = ('레드', '와인', '그린', '핑크',)
+    opt_2_display_names = ('감성레드', '감성와인', '감성그린', '감성핑크',)
 
     product = Product(market_id=market_id, name=name, display_name=display_name, price=price, sale_price=price - 1000,
                       category_id=category_id, is_hidden=is_hidden, is_sold_out=is_sold_out, hit_count=hit_count,
@@ -36,16 +37,16 @@ def gen_product(market_id: int, name: string, display_name: string, price: int, 
                         option_2_name=opt_2_name, option_2_display_name=opt_2_display_name).save()
 
 
-def gen_master(apps, schema_editor):
+def gen_master_product(apps, schema_editor):
     price = 10000
     hit_count = 1000
     review_count = 100
     review_point = 3
 
-    gen_product(1, '구두', '인스타 셀럽 구두', price, ('235, 3cm', '235, 6cm', '240, 3cm', '240, 6cm', '245, 3cm', '245, 6cm'),
+    gen_product(1, '구두', '인스타 셀럽 구두', price, ('235, 3cm', '235, 6cm', '240, 3cm', '240, 6cm', '245, 3cm', '245, 6cm',),
                 False, False, hit_count, review_count, review_point)
     gen_product(1, '구두', '아이돌 구두', price + 2000,
-                ('235, 3cm', '235, 6cm', '240, 3cm', '240, 6cm', '245, 3cm', '245, 6cm'),
+                ('235, 3cm', '235, 6cm', '240, 3cm', '240, 6cm', '245, 3cm', '245, 6cm',),
                 False, False, hit_count + 500, review_count + 50, review_point + 1)
 
     price = 12000
@@ -53,10 +54,10 @@ def gen_master(apps, schema_editor):
     review_count = 200
     review_point = 4
 
-    gen_product(1, '니트', '인스타 셀럽 니트', price, ('XS', 'S', 'M', 'L', 'XL'),
+    gen_product(1, '니트', '인스타 셀럽 니트', price, ('XS', 'S', 'M', 'L', 'XL',),
                 False, False, hit_count, review_count, review_point)
     gen_product(1, '니트', '아이돌 니트', price + 2000,
-                ('XS', 'S', 'M', 'L', 'XL'),
+                ('XS', 'S', 'M', 'L', 'XL',),
                 False, False, hit_count + 500, review_count + 50, review_point + 1)
 
     price = 14000
@@ -64,10 +65,10 @@ def gen_master(apps, schema_editor):
     review_count = 200
     review_point = 4
 
-    gen_product(1, '롱스커트', '인스타 셀럽 롱스커트', price, ('FREE'),
+    gen_product(1, '롱스커트', '인스타 셀럽 롱스커트', price, ('FREE',),
                 False, False, hit_count, review_count, review_point)
     gen_product(1, '롱스커트', '아이돌 롱스커트', price + 2000,
-                ('FREE'),
+                ('FREE',),
                 False, False, hit_count + 500, review_count + 50, review_point + 1)
 
     price = 10000
@@ -75,10 +76,10 @@ def gen_master(apps, schema_editor):
     review_count = 100
     review_point = 2
 
-    gen_product(1, '숏스커트', '인스타 셀럽 숏스커트', price, ('FREE'),
+    gen_product(1, '숏스커트', '인스타 셀럽 숏스커트', price, ('FREE',),
                 False, False, hit_count, review_count, review_point)
     gen_product(1, '숏스커트', '아이돌 숏스커트', price + 2000,
-                ('FREE'),
+                ('FREE',),
                 False, False, hit_count + 500, review_count + 50, review_point + 1)
 
     price = 20000
@@ -86,10 +87,10 @@ def gen_master(apps, schema_editor):
     review_count = 130
     review_point = 3
 
-    gen_product(2, '청바지', '인스타 셀럽 청바지', price, ('XS', 'S', 'M', 'L', 'XL'),
+    gen_product(2, '청바지', '인스타 셀럽 청바지', price, ('XS', 'S', 'M', 'L', 'XL',),
                 False, False, hit_count, review_count, review_point)
     gen_product(2, '청바지', '아이돌 청바지', price + 2000,
-                ('XS', 'S', 'M', 'L', 'XL'),
+                ('XS', 'S', 'M', 'L', 'XL',),
                 False, False, hit_count + 500, review_count + 50, review_point + 1)
 
     price = 30000
@@ -97,10 +98,10 @@ def gen_master(apps, schema_editor):
     review_count = 140
     review_point = 3
 
-    gen_product(2, '청자켓', '인스타 셀럽 청자켓', price, ('34', '36'),
+    gen_product(2, '청자켓', '인스타 셀럽 청자켓', price, ('34', '36',),
                 False, False, hit_count, review_count, review_point)
     gen_product(2, '청자켓', '아이돌 청자켓', price + 2000,
-                ('34', '36'),
+                ('34', '36',),
                 False, False, hit_count + 500, review_count + 50, review_point + 1)
 
     price = 15000
@@ -108,10 +109,10 @@ def gen_master(apps, schema_editor):
     review_count = 50
     review_point = 2
 
-    gen_product(2, '청치마', '인스타 셀럽 청치마', price, ('FREE'),
+    gen_product(2, '청치마', '인스타 셀럽 청치마', price, ('FREE',),
                 False, False, hit_count, review_count, review_point)
     gen_product(2, '청치마', '아이돌 청치마', price + 2000,
-                ('FREE'),
+                ('FREE',),
                 False, False, hit_count + 500, review_count + 50, review_point + 1)
 
     price = 75000
@@ -119,10 +120,10 @@ def gen_master(apps, schema_editor):
     review_count = 150
     review_point = 4
 
-    gen_product(3, '코트', '인스타 셀럽 코트', price, ('FREE'),
+    gen_product(3, '코트', '인스타 셀럽 코트', price, ('FREE',),
                 False, False, hit_count, review_count, review_point)
     gen_product(3, '코트', '아이돌 코트', price + 2000,
-                ('FREE'),
+                ('FREE',),
                 False, False, hit_count + 500, review_count + 50, review_point + 1)
 
     price = 175000
@@ -130,10 +131,10 @@ def gen_master(apps, schema_editor):
     review_count = 190
     review_point = 4
 
-    gen_product(3, '백', '인스타 셀럽 백', price, ('FREE'),
+    gen_product(3, '백', '인스타 셀럽 백', price, ('FREE',),
                 False, False, hit_count, review_count, review_point)
     gen_product(3, '백', '아이돌 백', price + 2000,
-                ('FREE'),
+                ('FREE',),
                 False, False, hit_count + 500, review_count + 50, review_point + 1)
 
     price = 25000
@@ -141,9 +142,8 @@ def gen_master(apps, schema_editor):
     review_count = 90
     review_point = 2
 
-    gen_product(3, '블라우스', '인스타 셀럽 블라우스', price, ('XS', 'S', 'M', 'L', 'XL'),
+    gen_product(3, '블라우스', '인스타 셀럽 블라우스', price, ('XS', 'S', 'M', 'L', 'XL',),
                 False, False, hit_count, review_count, review_point)
     gen_product(3, '블라우스', '아이돌 블라우스', price + 2000,
-                ('XS', 'S', 'M', 'L', 'XL'),
+                ('XS', 'S', 'M', 'L', 'XL',),
                 False, False, hit_count + 500, review_count + 50, review_point + 1)
-
