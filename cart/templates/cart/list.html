@@ -3,6 +3,28 @@
 
 {%block content %}
 
+<script>
+    function CartItemModifyForm__updateQuantity(el, add) {
+        const $form = $(el).closest('form');
+
+        const $salePrice = $form.find('.cart-item-modify-form__sale-price');
+        const productSalePrice = parseInt($salePrice.attr('data-sale-price'));
+        const $inputNumber = $form.find('input[type="number"]');
+        const oldQuantity = parseInt($inputNumber.val());
+        let newQuantity = oldQuantity + add;
+
+        if ( newQuantity > 100 ) {
+            newQuantity = 100;
+        }
+        else if ( newQuantity < 1 ) {
+            newQuantity = 1
+        }
+
+        $inputNumber.val(newQuantity);
+        $salePrice.text((productSalePrice * newQuantity).price_format());
+    }
+</script>
+
 <section class="section-cart-item-list">
     <div class="container">
         <h1 class="t-text-[1.2rem] t-font-bold">장바구니</h1>
@@ -25,20 +47,31 @@
                     <div>/</div>
                     <div>{{cart_item.product_real.option_2_display_name}}</div>
                 </div>
+                <div class="t-flex t-pl-5 t-mt-2">
+                    <div>\ {{ cart_item.product_real.product.sale_price|intcomma }}</div>
+                </div>
                 <form class="t-flex t-items-center t-pl-5 t-mt-2">
                     {% csrf_token %}
-                    <span onclick="$(this).next().next().val((parseInt($(this).next().next().val()) + 1) < 10 ? (parseInt($(this).next().next().val()) + 1) : 10)">
+                    <span onclick="CartItemModifyForm__updateQuantity(this, -1)">
+                        <i class="fas fa-minus-circle"></i>
+                    </span>
+                    <span>&nbsp;</span>
+                    <input readonly min="1" max="100" class="form-control t-w-[100px]" type="number" value="{{cart_item.quantity}}">
+                    <span>&nbsp;</span>
+                    <span onclick="CartItemModifyForm__updateQuantity(this, 1)">
                         <i class="fas fa-plus-circle"></i>
                     </span>
                     <span>&nbsp;</span>
-                    <input readonly min="1" max="100" class="form-control t-w-[100px]" type="number"
-                           value="{{cart_item.quantity}}">
+                    <input type="submit" class="btn btn-primary btn-sm" value="수량수정">
                     <span>&nbsp;</span>
-                    <span onclick="$(this).prev().prev().val((parseInt($(this).prev().prev().val()) - 1) > 0 ? (parseInt($(this).prev().prev().val()) - 1) : 1)">
-                        <i class="fas fa-minus-circle"></i>
-                    </span>
+                    <a href="#" class="btn btn-danger btn-sm">삭제</a>
                     <div class="t-flex-1"></div>
-                    <div><span>\ {{ cart_item.product_real.product.sale_price|intcomma }}</span></div>
+                    <div>
+                        총 가격 :
+                        \
+                        {% widthratio cart_item.quantity 1 cart_item.product_real.product.sale_price as total_price %}
+                        <span class="cart-item-modify-form__sale-price" data-sale-price="{{cart_item.product_real.product.sale_price}}">{{total_price|intcomma}}</span>
+                    </div>
                 </form>
                 <div>
 
@@ -49,7 +82,6 @@
             </li>
             {% endfor %}
         </ul>
-
     </div>
 </section>
 
