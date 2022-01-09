@@ -28,6 +28,7 @@ urlpatterns = [
     path('qna/', include('questions.urls')),
     path('admin/', admin.site.urls),
     ## path('find_username/', include('accounts.urls')),
+    path('cart/', include('cart.urls')),
 ]
 
 if settings.DEBUG:
