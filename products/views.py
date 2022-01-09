@@ -2,20 +2,17 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.core import exceptions
+from django.core.paginator import Paginator
 from django.http import HttpRequest
 from django.shortcuts import render, get_object_or_404, redirect
 
+from cart.forms import ProductCartAddForm
 from products.models import Product
 from questions.forms import QuestionForm
 from questions.models import Question
-from django.core.paginator import Paginator
-
-from cart.forms import CartAddForm
 
 
-def product_list(request: HttpRequest):  # 상품 목록
-
-    # 입력 파라미터
+def product_list(request: HttpRequest):
     search_keyword = request.GET.get('search_keyword', '')
     page = request.GET.get('page', '1')
 
@@ -24,8 +21,7 @@ def product_list(request: HttpRequest):  # 상품 목록
     else:
         products = Product.objects.filter(display_name__icontains=search_keyword).order_by('-id')
 
-    # 페이징처리
-    paginator = Paginator(products, 12)  # 페이지당 10개씩 노출
+    paginator = Paginator(products, 4)  # 페이지당 10개씩 보여주기
     products = paginator.get_page(page)
 
     return render(request, "products/product_list.html", {
@@ -34,7 +30,8 @@ def product_list(request: HttpRequest):  # 상품 목록
 
 
 def _product_detail(request: HttpRequest, product_id):
-    cart_add_form = CartAddForm(product_id=product_id)
+    cart_add_form = ProductCartAddForm(product_id=product_id)
+
     product = get_object_or_404(Product, id=product_id)
 
     if request.method == "POST" and request.user.is_authenticated:
@@ -46,9 +43,13 @@ def _product_detail(request: HttpRequest, product_id):
             question.user = request.user
             question.save()
             messages.success(request, "질문이 등록되었습니다.")
+
             return redirect("products:detail", product_id=product.id)
     else:
         form = QuestionForm()
+
+        form.errors
+
     product_reals = product.product_reals.order_by('option_1_display_name', 'option_2_display_name')
     questions = product.questions.order_by('-id')
 
