@@ -10,9 +10,10 @@ from questions.forms import QuestionForm
 from questions.models import Question
 from django.core.paginator import Paginator
 
+from cart.forms import CartAddForm
+
 
 def product_list(request: HttpRequest):  # 상품 목록
-
 
     # 입력 파라미터
     search_keyword = request.GET.get('search_keyword', '')
@@ -24,7 +25,7 @@ def product_list(request: HttpRequest):  # 상품 목록
         products = Product.objects.filter(display_name__icontains=search_keyword).order_by('-id')
 
     # 페이징처리
-    paginator = Paginator(products, 12) # 페이지당 10개씩 노출
+    paginator = Paginator(products, 12)  # 페이지당 10개씩 노출
     products = paginator.get_page(page)
 
     return render(request, "products/product_list.html", {
@@ -33,6 +34,7 @@ def product_list(request: HttpRequest):  # 상품 목록
 
 
 def _product_detail(request: HttpRequest, product_id):
+    cart_add_form = CartAddForm(product_id=product_id)
     product = get_object_or_404(Product, id=product_id)
 
     if request.method == "POST" and request.user.is_authenticated:
@@ -54,7 +56,8 @@ def _product_detail(request: HttpRequest, product_id):
         "product": product,
         "product_reals": product_reals,
         "questions": questions,
-        "question_form": form
+        "question_form": form,
+        "cart_add_form": cart_add_form,
     })
 
 
