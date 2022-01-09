@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% load humanize %}
+
+{%block content %}
+
+<section class="section-cart-item-list">
+    <div class="container">
+        <h1 class="t-text-[1.2rem] t-font-bold">장바구니</h1>
+
+        <div class="t-overflow-x-auto t-whitespace-nowrap">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>
+                        이미지
+                    </th>
+                    <th>상품명</th>
+                    <th>사이즈</th>
+                    <th>색상</th>
+                    <th>수량</th>
+                    <th>가격</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for cart_item in cart_items %}
+                <tr>
+                    <td><img class="t-w-[50px] t-h-[50px] sm:t-w-[150px] sm:t-h-[150px] t-object-cover rounded"
+                             src="{{cart_item.product_real.product.thumb_img_url}}" alt=""></td>
+                    <td>{{cart_item.product_real.product.name}}</td>
+                    <td>{{cart_item.product_real.option_1_display_name}}</td>
+                    <td>{{cart_item.product_real.option_2_display_name}}</td>
+                    <td>
+                        <form action="">
+                            {% csrf_token %}
+                            <input class="form-control t-w-[100px]" type="number" value="{{cart_item.quantity}}">
+                        </form>
+                    </td>
+                    <td>
+                        <span>\ {{ cart_item.product_real.product.sale_price|intcomma }}</span>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+{%endblock%}
