@@ -7,42 +7,47 @@
     <div class="container">
         <h1 class="t-text-[1.2rem] t-font-bold">장바구니</h1>
 
-        <div class="t-overflow-x-auto t-whitespace-nowrap">
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th>
-                        이미지
-                    </th>
-                    <th>상품명</th>
-                    <th>사이즈</th>
-                    <th>색상</th>
-                    <th>수량</th>
-                    <th>가격</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for cart_item in cart_items %}
-                <tr>
-                    <td><img class="t-w-[50px] t-h-[50px] sm:t-w-[150px] sm:t-h-[150px] t-object-cover rounded"
-                             src="{{cart_item.product_real.product.thumb_img_url}}" alt=""></td>
-                    <td>{{cart_item.product_real.product.name}}</td>
-                    <td>{{cart_item.product_real.option_1_display_name}}</td>
-                    <td>{{cart_item.product_real.option_2_display_name}}</td>
-                    <td>
-                        <form action="">
-                            {% csrf_token %}
-                            <input class="form-control t-w-[100px]" type="number" value="{{cart_item.quantity}}">
-                        </form>
-                    </td>
-                    <td>
-                        <span>\ {{ cart_item.product_real.product.sale_price|intcomma }}</span>
-                    </td>
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+        <div class="t-mt-[10px]">
+            <input type="checkbox">
         </div>
+
+        <ul>
+            {% for cart_item in cart_items %}
+            <li class="t-border-[color:#989898] t-border-0 t-border-t t-border-solid t-py-[20px]">
+                <div class="t-flex">
+                    <input type="checkbox">
+                    <img class="t-flex-shrink-0 t-ml-2 t-w-[80px] t-h-[80px] sm:t-w-[150px] sm:t-h-[150px] t-object-cover rounded"
+                         src="{{cart_item.product_real.product.thumb_img_url}}" alt="">
+                    <div class="t-ml-2">{{cart_item.product_real.product.display_name}}</div>
+                </div>
+                <div class="t-flex t-pl-5 t-mt-2">
+                    <div>{{cart_item.product_real.option_1_display_name}}</div>
+                    <div>/</div>
+                    <div>{{cart_item.product_real.option_2_display_name}}</div>
+                </div>
+                <form class="t-flex t-items-center t-pl-5 t-mt-2">
+                    {% csrf_token %}
+                    <span onclick="$(this).next().next().val((parseInt($(this).next().next().val()) + 1) < 10 ? (parseInt($(this).next().next().val()) + 1) : 10)">
+                        <i class="fas fa-plus-circle"></i>
+                    </span>
+                    <span>&nbsp;</span>
+                    <input readonly min="1" max="100" class="form-control t-w-[100px]" type="number" value="{{cart_item.quantity}}">
+                    <span>&nbsp;</span>
+                    <span onclick="$(this).prev().prev().val((parseInt($(this).prev().prev().val()) - 1) > 0 ? (parseInt($(this).prev().prev().val()) - 1) : 1)">
+                        <i class="fas fa-minus-circle"></i>
+                    </span>
+                    <div class="t-flex-1"></div>
+                    <div><span>\ {{ cart_item.product_real.product.sale_price|intcomma }}</span></div>
+                </form>
+                <div>
+
+                </div>
+                <div>
+
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
     </div>
 </section>
 
