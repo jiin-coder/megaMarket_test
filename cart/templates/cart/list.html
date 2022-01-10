@@ -23,6 +23,8 @@
         $inputNumber.val(newQuantity);
         $salePrice.text((productSalePrice * newQuantity).price_format());
     }
+
+
 </script>
 
 <section class="section-cart-item-list">
@@ -39,11 +41,11 @@
                 <div class="t-flex">
                     <input type="checkbox">
                     <a href="{% url 'products:detail' cart_item.product_real.product.id %}">
-                        <a href="{% url 'products:detail' cart_item.product_real.product.id %}">
                         <img class="t-flex-shrink-0 t-ml-2 t-w-[80px] t-h-[80px] sm:t-w-[150px] sm:t-h-[150px] t-object-cover rounded"
-                         src="{{cart_item.product_real.product.thumb_img_url}}" alt="">
+                             src="{{cart_item.product_real.product.thumb_img_url}}" alt="">
                     </a>
-                    <div class="t-ml-2"><a href="{% url 'products:detail' cart_item.product_real.product.id %}">{{cart_item.product_real.product.display_name}}</a></div>
+                    <div class="t-ml-2"><a href="{% url 'products:detail' cart_item.product_real.product.id %}">{{cart_item.product_real.product.display_name}}</a>
+                    </div>
                 </div>
                 <div class="t-flex t-pl-5 t-mt-2">
                     <div>{{cart_item.product_real.option_1_display_name}}</div>
@@ -53,13 +55,15 @@
                 <div class="t-flex t-pl-5 t-mt-2">
                     <div>\ {{ cart_item.product_real.product.sale_price|intcomma }}</div>
                 </div>
-                <form class="t-flex t-items-center t-pl-5 t-mt-2">
+                <form method="POST" action="{% url 'cart:modify' cart_item.id %}"
+                      class="t-flex t-items-center t-pl-5 t-mt-2">
                     {% csrf_token %}
                     <span onclick="CartItemModifyForm__updateQuantity(this, -1)">
                         <i class="fas fa-minus-circle"></i>
                     </span>
                     <span>&nbsp;</span>
-                    <input readonly min="1" max="100" class="form-control t-w-[100px]" type="number" value="{{cart_item.quantity}}">
+                    <input name="quantity" readonly min="1" max="100" class="form-control t-w-[100px]" type="number"
+                           value="{{cart_item.quantity}}">
                     <span>&nbsp;</span>
                     <span onclick="CartItemModifyForm__updateQuantity(this, 1)">
                         <i class="fas fa-plus-circle"></i>
@@ -67,13 +71,15 @@
                     <span>&nbsp;</span>
                     <input type="submit" class="btn btn-primary btn-sm" value="수량수정">
                     <span>&nbsp;</span>
-                    <a onclick="if ( !confirm('정말 삭제하시겠습니까?') ) return false;" href="{% url 'cart:delete' cart_item.id %}" class="btn btn-danger btn-sm">삭제</a>
+                    <a onclick="if ( !confirm('정말 삭제하시겠습니까?') ) return false;"
+                       href="{% url 'cart:delete' cart_item.id %}" class="btn btn-danger btn-sm">삭제</a>
                     <div class="t-flex-1"></div>
                     <div>
                         총 가격 :
                         \
                         {% widthratio cart_item.quantity 1 cart_item.product_real.product.sale_price as total_price %}
-                        <span class="cart-item-modify-form__sale-price" data-sale-price="{{cart_item.product_real.product.sale_price}}">{{total_price|intcomma}}</span>
+                        <span class="cart-item-modify-form__sale-price"
+                              data-sale-price="{{cart_item.product_real.product.sale_price}}">{{total_price|intcomma}}</span>
                     </div>
                 </form>
                 <div>
