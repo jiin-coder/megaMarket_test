@@ -9,7 +9,7 @@ from django.views.decorators.http import require_POST, require_GET
 from cart.forms import ProductCartAddForm
 from cart.models import CartItem
 from products.models import ProductReal
-
+from django.db.models import QuerySet
 
 @login_required
 @require_POST
@@ -18,9 +18,16 @@ def add(request: HttpRequest):
     form = ProductCartAddForm(request.POST)
 
     if form.is_valid():
-        cart_item = form.save(commit=False)
-        cart_item.user = request.user
-        cart_item.save()
+        cart_items_qs: QuerySet = CartItem.objects.filter(user=request.user, product_real=product_real)
+
+        if cart_items_qs.exists():
+            old_cart_item = cart_items_qs.first()
+            old_cart_item.quantity += int(form.cleaned_data['quantity'])
+            old_cart_item.save()
+        else:
+            cart_item = form.save(commit=False)
+            cart_item.user = request.user
+            cart_item.save()
 
         messages.success(request, "장바구니에 추가되었습니다.")
         return redirect('products:detail', product_real.product.id)

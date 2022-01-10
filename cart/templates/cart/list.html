@@ -38,9 +38,12 @@
             <li class="t-border-[color:#989898] t-border-0 t-border-t t-border-solid t-py-[20px]">
                 <div class="t-flex">
                     <input type="checkbox">
-                    <img class="t-flex-shrink-0 t-ml-2 t-w-[80px] t-h-[80px] sm:t-w-[150px] sm:t-h-[150px] t-object-cover rounded"
+                    <a href="{% url 'products:detail' cart_item.product_real.product.id %}">
+                        <a href="{% url 'products:detail' cart_item.product_real.product.id %}">
+                        <img class="t-flex-shrink-0 t-ml-2 t-w-[80px] t-h-[80px] sm:t-w-[150px] sm:t-h-[150px] t-object-cover rounded"
                          src="{{cart_item.product_real.product.thumb_img_url}}" alt="">
-                    <div class="t-ml-2">{{cart_item.product_real.product.display_name}}</div>
+                    </a>
+                    <div class="t-ml-2"><a href="{% url 'products:detail' cart_item.product_real.product.id %}">{{cart_item.product_real.product.display_name}}</a></div>
                 </div>
                 <div class="t-flex t-pl-5 t-mt-2">
                     <div>{{cart_item.product_real.option_1_display_name}}</div>
