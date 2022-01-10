@@ -34,8 +34,17 @@
     }
 
     function CartItems__itemCheckeChanged(el) {
-        const allCheckBoxNewCheckStatus = $('.cart-items__checkbox-item:not(:checked)').length == 0
+        const allCheckBoxNewCheckStatus = $('.cart-items__checkbox-item:not(:checked)').length == 0;
         $('.cart-items__checkbox-all').prop('checked', allCheckBoxNewCheckStatus);
+    }
+
+    function CartItems__deleteChecked() {
+        const cartItemIds = $('.cart-items__checkbox-item:checked')
+            .map((i, el) => parseInt($(el).attr('data-id')))
+            .toArray();
+
+        CartItemsDeleteForm.ids.value = cartItemIds;
+        CartItemsDeleteForm.submit();
     }
 
 </script>
@@ -52,7 +61,7 @@
             {% for cart_item in cart_items %}
             <li class="t-border-[color:#989898] t-border-0 t-border-t t-border-solid t-py-[20px]">
                 <div class="t-flex">
-                    <input type="checkbox" class="cart-items__checkbox-item" onchange="CartItems__itemCheckeChanged(this)">
+                    <input data-id="{{cart_item.id}}" type="checkbox" class="cart-items__checkbox-item" onchange="CartItems__itemCheckeChanged(this)">
                     <a href="{% url 'products:detail' cart_item.product_real.product.id %}">
                         <img class="t-flex-shrink-0 t-ml-2 t-w-[80px] t-h-[80px] sm:t-w-[150px] sm:t-h-[150px] t-object-cover rounded"
                              src="{{cart_item.product_real.product.thumb_img_url}}" alt="">
@@ -104,6 +113,15 @@
             </li>
             {% endfor %}
         </ul>
+
+        <div>
+            <button type="button" class="btn btn-danger btn-sm" onclick="CartItems__deleteChecked();">선택삭제</button>
+        </div>
+
+        <form name="CartItemsDeleteForm" class="t-hidden" action="{% url 'cart:delete_items' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="ids" value="">
+        </form>
     </div>
 </section>
 
