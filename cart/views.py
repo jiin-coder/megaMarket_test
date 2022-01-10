@@ -3,15 +3,13 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest
 
 # Create your views here.
-from django.shortcuts import redirect
-from django.views.decorators.http import require_POST
-
-from cart.forms import ProductCartAddForm
-from products.models import ProductReal
-
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST, require_GET
+
+from cart.forms import ProductCartAddForm
 from cart.models import CartItem
+from products.models import ProductReal
+
 
 @login_required
 @require_POST
