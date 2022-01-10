@@ -24,6 +24,19 @@
         $salePrice.text((productSalePrice * newQuantity).price_format());
     }
 
+    function CartItems__allCheckBoxCheckChanged(el) {
+        if ( el.checked ) {
+            $('.cart-items__checkbox-item:not(:checked)').prop('checked', true);
+        }
+        else {
+            $('.cart-items__checkbox-item:checked').prop('checked', false);
+        }
+    }
+
+    function CartItems__itemCheckeChanged(el) {
+        const allCheckBoxNewCheckStatus = $('.cart-items__checkbox-item:not(:checked)').length == 0
+        $('.cart-items__checkbox-all').prop('checked', allCheckBoxNewCheckStatus);
+    }
 
 </script>
 
@@ -32,14 +45,14 @@
         <h1 class="t-text-[1.2rem] t-font-bold">장바구니</h1>
 
         <div class="t-mt-[10px]">
-            <input type="checkbox">
+            <input type="checkbox" class="cart-items__checkbox-all" onchange="CartItems__allCheckBoxCheckChanged(this)">
         </div>
 
         <ul>
             {% for cart_item in cart_items %}
             <li class="t-border-[color:#989898] t-border-0 t-border-t t-border-solid t-py-[20px]">
                 <div class="t-flex">
-                    <input type="checkbox">
+                    <input type="checkbox" class="cart-items__checkbox-item" onchange="CartItems__itemCheckeChanged(this)">
                     <a href="{% url 'products:detail' cart_item.product_real.product.id %}">
                         <img class="t-flex-shrink-0 t-ml-2 t-w-[80px] t-h-[80px] sm:t-w-[150px] sm:t-h-[150px] t-object-cover rounded"
                              src="{{cart_item.product_real.product.thumb_img_url}}" alt="">
