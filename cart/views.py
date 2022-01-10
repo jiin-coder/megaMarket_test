@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest
 
 # Create your views here.
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views.decorators.http import require_POST, require_GET
 
 from cart.forms import ProductCartAddForm
@@ -37,3 +37,17 @@ def list(request: HttpRequest):
     return render(request, "cart/list.html", {
         "cart_items": cart_items
     })
+
+@login_required
+@require_GET
+def delete(request: HttpRequest, cart_item_id):
+    cart_item = get_object_or_404(CartItem, id=cart_item_id)
+
+    if cart_item.user != request.user:
+        raise PermissionError
+
+    cart_item.delete()
+
+    messages.success(request, "해당 장바구니 품목이 삭제되었습니다.")
+
+    return redirect('cart:list')

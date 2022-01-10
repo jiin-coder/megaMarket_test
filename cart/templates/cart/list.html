@@ -64,7 +64,7 @@
                     <span>&nbsp;</span>
                     <input type="submit" class="btn btn-primary btn-sm" value="수량수정">
                     <span>&nbsp;</span>
-                    <a href="#" class="btn btn-danger btn-sm">삭제</a>
+                    <a onclick="if ( !confirm('정말 삭제하시겠습니까?') ) return false;" href="{% url 'cart:delete' cart_item.id %}" class="btn btn-danger btn-sm">삭제</a>
                     <div class="t-flex-1"></div>
                     <div>
                         총 가격 :
